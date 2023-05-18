@@ -12,6 +12,8 @@ type Config struct {
 		Mode string
 		Port string
 	}
+
+	DB map[string]map[string]interface{}
 }
 
 func GetConfig(fpath string) *Config {
