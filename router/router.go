@@ -57,10 +57,24 @@ func (p *Router) Idx() *gin.Engine {
 	r.Use(gin.Recovery())  //gin 내부 recover, recovery 미들웨어 사용 - 패닉복구
 	r.Use(CORS()) //crossdomain 미들웨어 사용 등록
 
-	account := r.Group("acc/v01", liteAuth())
+	owner := r.Group("owner/v01", liteAuth())
 	{
-		fmt.Println(account)
-		account.GET("/ok", p.ct.GetOK)		// controller 패키지의 실제 처리 함수
+		fmt.Println(owner)
+		owner.POST("/menu", p.ct.InsertMenu)
+		owner.POST("/menu/del", p.ct.DelMenu)
+		owner.POST("/menu/recommend", p.ct.RecommendMenu)
+		owner.GET("/order/all/:id", p.ct.FindOrder)
+		owner.POST("/order/status", p.ct.UpdateOrderStatus)
+	}
+
+	customer := r.Group("customer/v01", liteAuth())
+	{
+		fmt.Println(customer)
+		customer.POST("/user", p.ct.InsertUser)
+		customer.POST("/order", p.ct.InsertOrder)
+		customer.POST("/order/update", p.ct.UpdateOrder)
+		customer.GET("/order/:id", p.ct.FindOneOrder)
+		customer.GET("/order/all/:id", p.ct.FindOrder)
 	}
 
 	return r
